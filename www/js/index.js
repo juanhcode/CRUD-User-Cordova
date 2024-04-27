@@ -116,7 +116,7 @@ document.addEventListener('init', function (event) {
     };
   }
   else if (page.id === 'page2') {
-    let createAlertDialog = function (user) {
+    let createAlertDialog = function (user, idSelected) {
       let dialog = document.getElementById('my-alert-dialog');
       if (dialog) {
         let container = document.querySelector('.alert-dialog-content');
@@ -127,6 +127,9 @@ document.addEventListener('init', function (event) {
                 <p> Username: ${user.username} </p>
                 <p> Telefono: ${user.telefono} </p>
                 `;
+        dialog.querySelector('.delete').onclick = function (e) {
+          console.log(e.target);
+        };
         dialog.show();
       } else {
         ons.createElement('alert-dialog.html', { append: true })
@@ -141,6 +144,7 @@ document.addEventListener('init', function (event) {
                 `;
             let edit = dialog.querySelector('.edit');
             let ok = dialog.querySelector('.ok');
+            let deleteUser = dialog.querySelector('.delete');
             edit.addEventListener('click', () => {
               document
                 .getElementById('my-alert-dialog')
@@ -151,12 +155,39 @@ document.addEventListener('init', function (event) {
                 .getElementById('my-alert-dialog')
                 .hide();
             })
+            deleteUser.addEventListener('click', () => {
+              ons.notification.confirm("Deseas eliminar este usuario?", {
+                title: "Eliminar Usuario",
+                buttonLabels: ["Cancelar", "Eliminar"],
+                callback: function (index) {
+                  if (index === 1) {
+                    fDeleteUser(idSelected);
+
+                  }
+                }
+              })
+            })
             dialog.show();
           });
       }
     };
 
+    const fDeleteUser = function (id) {
+      console.log("ID seleccionado para eliminar: ", id);
+      global_database.transaction(function (tx) {
+        tx.executeSql('DELETE FROM user WHERE id = ?', [id]);
+      }, function (error) {
+        console.log('DELETE >> Error de transacción: ' + error.message);
+        ons.notification.toast('Error', { timeout: 2000 });
+      }, function (data) {
+        ons.notification.toast('Usuario eliminado', { timeout: 2000 });
+        console.log('Dato eliminado >> ', data);
+      });
+    }
+
     page.querySelector('ons-toolbar .center').innerHTML = page.data.title;
+
+
     let listUsers = page.querySelector('.list-users');
     global_database.transaction(function (tx) {
       tx.executeSql('SELECT * FROM user', [], function (tx, rs) {
@@ -170,13 +201,15 @@ document.addEventListener('init', function (event) {
         console.log('SELECT error: ' + error.message);
       });
     });
+
+
     page.querySelector('ons-list').onclick = function (evento) {
       let id = evento.target.textContent.split(' ')[0];
-      console.log("ID seleccionado: ", id);
+      console.log("ID Lista: ", id);
       global_database.transaction(function (tx) {
         tx.executeSql('SELECT * FROM user WHERE id = ?', [id], function (tx, rs) {
           let user = rs.rows.item(0);
-          createAlertDialog(user);
+          createAlertDialog(user, id);
         }, function (tx, error) {
           console.log('SELECT error: ' + error.message);
         });
