@@ -16,14 +16,5 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
-    <access origin="whatsapp:*" launch-external="yes" />
-
-    <platform name="android">
-        <icon src="res/android/icon/drawable-mdpi-icon.png" density="mdpi"/>
-        <icon src="res/android/icon/drawable-hdpi-icon.png" density="hdpi"/>
-        <icon src="res/android/icon/drawable-xhdpi-icon.png" density="xhdpi"/>
-        <icon src="res/android/icon/drawable-xxhdpi-icon.png" density="xxhdpi"/>
-        <icon src="res/android/icon/drawable-xxxhdpi-icon.png" density="xxxhdpi"/>
-    </platform>
-    
+    <access origin="whatsapp:*" launch-external="yes" /> 
 </widget>

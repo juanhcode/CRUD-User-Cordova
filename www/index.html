@@ -49,7 +49,10 @@
                     <ons-button id="submit">Registrar</ons-button>
                 </div>
             </div>
-            <ons-button id="push-button">Push page</ons-button>
+            <div class="container-buttons">
+                <ons-button id="push-button">Push page</ons-button>
+                <ons-button id="push-button3">Buscar usuario</ons-button>
+            </div>
         </ons-page>
     </template>
 
@@ -73,6 +76,18 @@
                     </div>
                 </ons-alert-dialog>
             </template>
+        </ons-page>
+    </template>
+
+    <template id="page3.html">
+        <ons-page id="page3">
+            <ons-toolbar>
+                <div class="left"><ons-back-button>Page 1</ons-back-button></div>
+                <div class="center"></div>
+            </ons-toolbar>
+            <p style="text-align: center; margin-top: 10px;">
+                <ons-search-input class="search" placeholder="Search"></ons-search-input>
+            </p>
         </ons-page>
     </template>
 

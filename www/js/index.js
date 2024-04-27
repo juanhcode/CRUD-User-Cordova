@@ -110,10 +110,14 @@ document.addEventListener('init', function (event) {
       document.querySelector('#myNavigator').pushPage('page2.html',
         { data: { title: 'Page 2', myData: JSON.stringify({ "first": "primer dato" }) } });
     };
+    page.querySelector('#push-button3').onclick = function () {
+      document.querySelector('#myNavigator').pushPage('page3.html',
+        { data: { title: 'Buscar Usuario', myData: JSON.stringify({ "first": "primer dato" }) } });
+    };
   }
   else if (page.id === 'page2') {
     let createAlertDialog = function (user) {
-      let dialog = document.getElementById('my-alert-dialog');   
+      let dialog = document.getElementById('my-alert-dialog');
       if (dialog) {
         let container = document.querySelector('.alert-dialog-content');
         container.innerHTML = `
@@ -182,6 +186,29 @@ document.addEventListener('init', function (event) {
   }
   else if (page.id === 'page3') {
     page.querySelector('ons-toolbar .center').innerHTML = page.data.title;
+    page.querySelector('.search').onchange = function () {
+      let email = this.value;
+      global_database.transaction(function (tx) {
+        tx.executeSql('SELECT * FROM user WHERE email = ?', [email], function (tx, rs) {
+          let user = rs.rows.item(0);
+          if (user) {
+            ons.notification.confirm(
+              'Usuario'
+              + "<br>" + "Nombre: " + user.nombre
+              + "<br>" + "Email: " + user.email
+              + "<br>" + "Username: " + user.username
+              + "<br>" + "Telefono: " + user.telefono);
+          } else {
+            ons.notification.toast('Usuario no encontrado', { timeout: 2000 });
+          }
+        }, function (tx, error) {
+          console.log('SELECT error: ' + error.message);
+          ons.notification.alert('Searched for: ' + error.message);
+        });
+      });
+    };
+
+
   }
 
 
