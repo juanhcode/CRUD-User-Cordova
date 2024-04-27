@@ -1,33 +1,10 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
 var global_database;
 
-// Wait for the deviceready event before using any of Cordova's device APIs.
-// See https://cordova.apache.org/docs/en/latest/cordova/events/events.html#deviceready
 document.addEventListener('deviceready', onDeviceReady, false);
 
 function onDeviceReady() {
-  // Cordova is now initialized. Have fun!
 
   console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
-  //document.getElementById('deviceready').classList.add('ready');
 
 
   // Abrir la base de datos SQLite
@@ -135,40 +112,41 @@ document.addEventListener('init', function (event) {
     };
   }
   else if (page.id === 'page2') {
-    let createAlertDialog = function (idUser) {
-      let dialog = document.getElementById('my-alert-dialog');
+    let createAlertDialog = function (user) {
+      let dialog = document.getElementById('my-alert-dialog');   
       if (dialog) {
-        dialog.show();
-      } else {
-        ons.createElement('alert-dialog.html', { append: true })
-          .then(function (dialog) {
-            global_database.transaction(function (tx) {
-              tx.executeSql('SELECT * FROM user WHERE id = ?', [idUser], function (tx, rs) {
-                let user = rs.rows.item(0);
-                let container = document.querySelector('.alert-dialog-content');
-                container.innerHTML = `
+        let container = document.querySelector('.alert-dialog-content');
+        container.innerHTML = `
                 <p> Id: ${user.id} </p>
                 <p> Nombre: ${user.nombre} </p>
                 <p> Email: ${user.email} </p>
                 <p> Username: ${user.username} </p>
                 <p> Telefono: ${user.telefono} </p>
                 `;
-                let edit = dialog.querySelector('.edit');
-                let ok = dialog.querySelector('.ok');
-                edit.addEventListener('click', () => {
-                  document
-                    .getElementById('my-alert-dialog')
-                    .hide();
-                })
-                ok.addEventListener('click', () => {
-                  document
-                    .getElementById('my-alert-dialog')
-                    .hide();
-                })
-              }, function (tx, error) {
-                console.log('SELECT error: ' + error.message);
-              });
-            });
+        dialog.show();
+      } else {
+        ons.createElement('alert-dialog.html', { append: true })
+          .then(function (dialog) {
+            let container = document.querySelector('.alert-dialog-content');
+            container.innerHTML = `
+                <p> Id: ${user.id} </p>
+                <p> Nombre: ${user.nombre} </p>
+                <p> Email: ${user.email} </p>
+                <p> Username: ${user.username} </p>
+                <p> Telefono: ${user.telefono} </p>
+                `;
+            let edit = dialog.querySelector('.edit');
+            let ok = dialog.querySelector('.ok');
+            edit.addEventListener('click', () => {
+              document
+                .getElementById('my-alert-dialog')
+                .hide();
+            })
+            ok.addEventListener('click', () => {
+              document
+                .getElementById('my-alert-dialog')
+                .hide();
+            })
             dialog.show();
           });
       }
@@ -190,7 +168,16 @@ document.addEventListener('init', function (event) {
     });
     page.querySelector('ons-list').onclick = function (evento) {
       let id = evento.target.textContent.split(' ')[0];
-      createAlertDialog(id);
+      console.log("ID seleccionado: ", id);
+      global_database.transaction(function (tx) {
+        tx.executeSql('SELECT * FROM user WHERE id = ?', [id], function (tx, rs) {
+          let user = rs.rows.item(0);
+          createAlertDialog(user);
+        }, function (tx, error) {
+          console.log('SELECT error: ' + error.message);
+        });
+      });
+
     }
   }
   else if (page.id === 'page3') {
