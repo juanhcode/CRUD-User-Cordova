@@ -142,7 +142,6 @@ document.addEventListener('init', function (event) {
         console.log("Perra");
         ons.createElement('alert-dialog.html', { append: true })
           .then(function (dialog) {
-            console.log(user);
             let container = document.querySelector('.alert-dialog-content');
             container.innerHTML = `
                 <p> Id: ${user.id} </p>
@@ -173,6 +172,7 @@ document.addEventListener('init', function (event) {
                 buttonLabels: ["Cancelar", "Eliminar"],
                 callback: function (index) {
                   if (index === 1) {
+                    console.log(user);
                     fDeleteUser(user.id);
                   }
                 }
@@ -184,6 +184,7 @@ document.addEventListener('init', function (event) {
     };
 
     const fDeleteUser = function (id) {
+      console.log("ID del usuario a eliminar >> ", id);
       global_database.transaction(function (tx) {
         tx.executeSql('DELETE FROM user WHERE id = ?', [id]);
       }, function (error) {
@@ -204,7 +205,7 @@ document.addEventListener('init', function (event) {
         tx.executeSql('SELECT * FROM user', [], function (tx, rs) {
           for (var i = 0; i < rs.rows.length; i++) {
             listUsers.innerHTML += `
-            <ons-list-item tappable>${i + 1} | ${rs.rows.item(i).nombre}</ons-list-item>
+            <ons-list-item tappable>${i+1} | Id: ${rs.rows.item(i).id} Nombre: ${rs.rows.item(i).nombre} Username:${rs.rows.item(i).username}</ons-list-item>
             `
           };
 
@@ -217,7 +218,8 @@ document.addEventListener('init', function (event) {
 
 
     page.querySelector('ons-list').onclick = function (evento) {
-      let id = evento.target.textContent.split(' ')[0];
+      console.log(evento.target.textContent.split(' '));
+      let id = evento.target.textContent.split(' ')[3];
       console.log(id);
       global_database.transaction(function (tx) {
         tx.executeSql('SELECT * FROM user WHERE id = ?', [id], function (tx, rs) {
