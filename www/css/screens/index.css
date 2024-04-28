@@ -8,9 +8,3 @@
     align-items: center;
     justify-content: center;
 }
-
-.container-buttons{
-    display: flex;
-    justify-content: center;
-    margin: 10px;
-}

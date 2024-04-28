@@ -25,14 +25,6 @@ function onDeviceReady() {
   }, function (data) {
     console.log('Base de datos y tabla creada con éxito', data);
   });
-
-  /*
-  global_database.close(function(response) {
-    console.log('Database is closed now.', response);
-  }, function(error) {
-    console.log('Error closing database: ' + error.message);
-  });
-  */
 }
 
 
@@ -66,7 +58,7 @@ document.addEventListener('init', function (event) {
         global_database.transaction(function (tx) {
           tx.executeSql('UPDATE user SET nombre=?,email=?,username=?,password=?,telefono=? WHERE id=?', [User.name, User.email, User.username, User.password, User.phone, page.data.usuario.id]);
         }, function (error) {
-          console.log('Error de transacción: ' + error.message);
+          ons.notification.alert('Error de transacción: ' + error.message);
         }, function (data) {
           page.querySelector('#name').value = '';
           page.querySelector('#email').value = '';
@@ -96,7 +88,7 @@ document.addEventListener('init', function (event) {
       global_database.transaction(function (tx) {
         tx.executeSql('INSERT INTO user (nombre,email,username,password,telefono) VALUES (?,?,?,?,?)', [User.name, User.email, User.username, User.password, User.phone]);
       }, function (error) {
-        console.log('Error de transacción: ' + error.message);
+        ons.notification.alert('Error de transacción: ' + error.message);
       }, function (data) {
         page.querySelector('#name').value = '';
         page.querySelector('#email').value = '';
@@ -108,7 +100,7 @@ document.addEventListener('init', function (event) {
     }
     page.querySelector('#push-button').onclick = function () {
       document.querySelector('#myNavigator').pushPage('page2.html',
-        { data: { title: 'Page 2', myData: JSON.stringify({ "first": "primer dato" }) } });
+        { data: { title: 'Lista Usuarios', myData: JSON.stringify({ "first": "primer dato" }) } });
     };
     page.querySelector('#push-button3').onclick = function () {
       document.querySelector('#myNavigator').pushPage('page3.html',
@@ -119,7 +111,6 @@ document.addEventListener('init', function (event) {
     let createAlertDialog = function (user) {
       let dialog = document.getElementById('my-alert-dialog');
       if (dialog) {
-        console.log("hola perra");
         let container = document.querySelector('.alert-dialog-content');
         container.innerHTML = `
                 <p> Id: ${user.id} </p>
@@ -130,7 +121,6 @@ document.addEventListener('init', function (event) {
                 `;
         dialog.show();
       } else {
-        console.log("Perra");
         ons.createElement('alert-dialog.html', { append: true })
           .then(function (dialog) {
             let container = document.querySelector('.alert-dialog-content');
@@ -163,7 +153,6 @@ document.addEventListener('init', function (event) {
                 buttonLabels: ["Cancelar", "Eliminar"],
                 callback: function (index) {
                   if (index === 1) {
-                    console.log(user);
                     fDeleteUser(user.id);
                   }
                 }
@@ -175,15 +164,12 @@ document.addEventListener('init', function (event) {
     };
 
     const fDeleteUser = function (id) {
-      console.log("ID del usuario a eliminar >> ", id);
       global_database.transaction(function (tx) {
         tx.executeSql('DELETE FROM user WHERE id = ?', [id]);
       }, function (error) {
-        console.log('DELETE >> Error de transacción: ' + error.message);
         ons.notification.toast('Error', { timeout: 2000 });
       }, function (data) {
         ons.notification.toast('Usuario eliminado', { timeout: 2000 });
-        console.log('Dato eliminado >> ', data);
       });
     }
 
@@ -191,11 +177,9 @@ document.addEventListener('init', function (event) {
       global_database.transaction(function (tx) {
         tx.executeSql('DELETE FROM user WHERE email = ?', [email]);
       }, function (error) {
-        console.log('DELETE >> Error de transacción: ' + error.message);
         ons.notification.toast('Error', { timeout: 2000 });
       }, function (data) {
         ons.notification.toast('Usuario eliminado', { timeout: 2000 });
-        console.log('Dato eliminado >> ', data);
       });
     }
 
@@ -213,7 +197,7 @@ document.addEventListener('init', function (event) {
           };
 
         }, function (tx, error) {
-          console.log('SELECT error: ' + error.message);
+          ons.notification.alert('Error de transacción: ' + error.message);
         });
       });
     }
@@ -221,15 +205,13 @@ document.addEventListener('init', function (event) {
 
 
     page.querySelector('ons-list').onclick = function (evento) {
-      console.log(evento.target.textContent.split(' '));
       let id = evento.target.textContent.split(' ')[3];
-      console.log(id);
       global_database.transaction(function (tx) {
         tx.executeSql('SELECT * FROM user WHERE id = ?', [id], function (tx, rs) {
           let user = rs.rows.item(0);
           createAlertDialog(user);
         }, function (tx, error) {
-          console.log('SELECT error: ' + error.message);
+          ons.notification.alert('Error de transacción: ' + error.message);
         });
       });
 
@@ -253,7 +235,6 @@ document.addEventListener('init', function (event) {
             ons.notification.toast('Usuario no encontrado', { timeout: 2000 });
           }
         }, function (tx, error) {
-          console.log('SELECT error: ' + error.message);
           ons.notification.alert('Searched for: ' + error.message);
         });
       });

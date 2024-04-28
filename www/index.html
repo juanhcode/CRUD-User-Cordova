@@ -46,15 +46,15 @@
                     <p>
                         <ons-input id="phone" modifier="underbar" type="tel" placeholder="telefono" float></ons-input>
                     </p>
-                    <ons-button id="submit" >Registrar</ons-button>
+                    <ons-button id="submit">Registrar</ons-button>
                     <ons-button id="edit" disabled="false">Actualizar</ons-button>
+                    <br>
+                    <br>
+                    <ons-button id="push-button">Usuarios</ons-button>
+                    <ons-button id="push-button3">Buscar usuario</ons-button>
                 </div>
             </div>
             <br>
-            <div class="container-buttons">
-                <ons-button id="push-button">Push page</ons-button>
-                <ons-button id="push-button3">Buscar usuario</ons-button>
-            </div>
         </ons-page>
     </template>
 
@@ -65,7 +65,7 @@
                 <div class="center"></div>
             </ons-toolbar>
             <ons-list>
-                <ons-list-header class="list-users">Users</ons-list-header>
+                <ons-list-header class="list-users">Usuarios</ons-list-header>
             </ons-list>
             <template id="alert-dialog.html">
                 <ons-alert-dialog id="my-alert-dialog" modifier="rowfooter">
@@ -73,8 +73,8 @@
                     <div class="alert-dialog-content">
                     </div>
                     <div class="alert-dialog-footer">
-                        <ons-alert-dialog-button class="edit">Edit</ons-alert-dialog-button>
-                        <ons-alert-dialog-button class="delete">Delete</ons-alert-dialog-button>
+                        <ons-alert-dialog-button class="edit">Editar</ons-alert-dialog-button>
+                        <ons-alert-dialog-button class="delete">Eliminar</ons-alert-dialog-button>
                         <ons-alert-dialog-button class="ok">OK</ons-alert-dialog-button>
                     </div>
                 </ons-alert-dialog>
