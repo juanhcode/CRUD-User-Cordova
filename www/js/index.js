@@ -25,15 +25,6 @@ function onDeviceReady() {
   }, function (data) {
     console.log('Base de datos y tabla creada con éxito', data);
   });
-  /*
-  // Actualizar
-  global_database.transaction(function(tx) {
-    tx.executeSql('UPDATE demo_table SET name=?, score=? WHERE id=?', ['Bob', 202, 1]);
-  }, function(error) {
-    console.log('UPDATE >> Error de transacción: ' + error.message);
-  }, function(data) {
-    console.log('Dato actualizado >> ', data);
-  });
 
   /*
   global_database.close(function(response) {
@@ -187,6 +178,18 @@ document.addEventListener('init', function (event) {
       console.log("ID del usuario a eliminar >> ", id);
       global_database.transaction(function (tx) {
         tx.executeSql('DELETE FROM user WHERE id = ?', [id]);
+      }, function (error) {
+        console.log('DELETE >> Error de transacción: ' + error.message);
+        ons.notification.toast('Error', { timeout: 2000 });
+      }, function (data) {
+        ons.notification.toast('Usuario eliminado', { timeout: 2000 });
+        console.log('Dato eliminado >> ', data);
+      });
+    }
+
+    const deleteUserByEmail = function (email) {
+      global_database.transaction(function (tx) {
+        tx.executeSql('DELETE FROM user WHERE email = ?', [email]);
       }, function (error) {
         console.log('DELETE >> Error de transacción: ' + error.message);
         ons.notification.toast('Error', { timeout: 2000 });
